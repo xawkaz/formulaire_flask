@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation d'inscription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Inscription confirmée</h1>
+            <p>Merci pour votre inscription ! Voici les informations que vous avez fournies :</p>
+            
+            <div class="info-container">
+                <div class="info-item">
+                    <strong>Nom complet :</strong>
+                    <span>{{ data.nom_complet }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Ville :</strong>
+                    <span>{{ data.ville }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Email :</strong>
+                    <span>{{ data.email }}</span>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <a href="{{ url_for('index') }}" class="btn">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

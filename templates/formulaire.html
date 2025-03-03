@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire d'inscription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Formulaire d'inscription</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('formulaire') }}" id="inscription-form" novalidate>
+                {{ form.csrf_token }}
+                
+                <div class="form-group">
+                    {{ form.nom_complet.label }}
+                    {{ form.nom_complet(class="form-control", placeholder="Entrez votre nom complet") }}
+                    {% if form.nom_complet.errors %}
+                        <div class="error-message">
+                            {% for error in form.nom_complet.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.ville.label }}
+                    {{ form.ville(class="form-control", placeholder="Entrez votre ville") }}
+                    {% if form.ville.errors %}
+                        <div class="error-message">
+                            {% for error in form.ville.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="form-control", placeholder="Entrez votre email", type="email") }}
+                    {% if form.email.errors %}
+                        <div class="error-message">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="button-container">
+                    {{ form.submit(class="btn") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('inscription-form');
+            
+            form.addEventListener('submit', function(event) {
+                let isValid = true;
+                
+                // Validation nom complet
+                const nomComplet = document.getElementById('nom_complet');
+                if (!nomComplet.value.trim()) {
+                    isValid = false;
+                    showError(nomComplet, 'Le nom complet est obligatoire');
+                } else {
+                    hideError(nomComplet);
+                }
+                
+                // Validation ville
+                const ville = document.getElementById('ville');
+                if (!ville.value.trim()) {
+                    isValid = false;
+                    showError(ville, 'La ville est obligatoire');
+                } else {
+                    hideError(ville);
+                }
+                
+                // Validation email
+                const email = document.getElementById('email');
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email.value.trim()) {
+                    isValid = false;
+                    showError(email, 'L\'email est obligatoire');
+                } else if (!emailPattern.test(email.value.trim())) {
+                    isValid = false;
+                    showError(email, 'Format d\'email invalide');
+                } else {
+                    hideError(email);
+                }
+                
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+            
+            function showError(input, message) {
+                const formGroup = input.closest('.form-group');
+                let errorDiv = formGroup.querySelector('.error-message');
+                
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    formGroup.appendChild(errorDiv);
+                }
+                
+                errorDiv.textContent = message;
+                input.classList.add('error');
+            }
+            
+            function hideError(input) {
+                const formGroup = input.closest('.form-group');
+                const errorDiv = formGroup.querySelector('.error-message');
+                
+                if (errorDiv) {
+                    errorDiv.textContent = '';
+                }
+                
+                input.classList.remove('error');
+            }
+        });
+    </script>
+</body>
+</html>
